@@ -84,13 +84,13 @@ const Login = () => {
       return;
     }
 
-    // Admin Redirection - REMOVED (Handled by backend now)
-    /*
+    // Admin Redirection - Skip OTP, go to password
     if (id === "ADMIN001") {
-      navigate("/admin");
+      setStep("login");
+      setLoginData(prev => ({ ...prev, registerNumber: id }));
+      toast.info("Admin account detected. Please enter password.");
       return;
     }
-    */
 
     try {
       const response = await axios.post(`${API_URL}/verify-id`, { registerNumber: id });
@@ -104,22 +104,6 @@ const Login = () => {
       }
 
       if (status === "allowed") {
-        // Admin Bypass: Direct Login
-        if (role === "admin") {
-          const adminUser = {
-            name: "Administrator",
-            email: email,
-            role: "admin",
-            registerNumber: id
-          };
-          setUser(adminUser);
-          localStorage.setItem("user", JSON.stringify(adminUser));
-          localStorage.setItem("userType", "admin");
-          toast.success("Welcome Admin!");
-          navigate("/admin");
-          return;
-        }
-
         // Common logic after user is found
         const detectedDept = extractDepartment(id);
         setUserType(role);

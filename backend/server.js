@@ -110,6 +110,23 @@ db.serialize(() => {
             console.log("Seeded allowed_admins");
         }
     });
+
+    db.get("SELECT count(*) as count FROM users WHERE registerNumber = 'ADMIN001'", (err, row) => {
+        if (row && row.count === 0) {
+            const stmt = db.prepare(`
+                INSERT INTO users (
+                    name, email, password, role, registerNumber, department, 
+                    mobile, semester, admissionNumber, gender, designation, qualification
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `);
+            stmt.run(
+                "System Admin", "admin@college.edu", "admin123", "admin", "ADMIN001",
+                "Administration", "0000000000", "N/A", "N/A", "N/A", "Administrator", "Master"
+            );
+            stmt.finalize();
+            console.log("Seeded default admin user");
+        }
+    });
 });
 
 // APIs
@@ -893,7 +910,14 @@ app.post("/api/notifications/:id/reply", (req, res) => {
 // Home route
 app.get("/", (req, res) => {
     res.send("Backend is running with Authentication");
+
+
 });
+
+
+app.post("/addAdmin", (req, res) => {
+
+})
 
 // Start server
 app.listen(5000, () => {
