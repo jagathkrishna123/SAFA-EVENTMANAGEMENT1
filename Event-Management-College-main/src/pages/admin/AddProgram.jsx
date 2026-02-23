@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = " https://safa-eventmanagement1-2.onrender.com/api";
 
 const ICON_OPTIONS = [
   { label: "Bolt", value: FaBolt },
