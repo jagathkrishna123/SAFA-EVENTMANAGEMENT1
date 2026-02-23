@@ -1,27 +1,39 @@
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
-
+import fs from "fs";
+import path from "path";
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ limit: "100mb", extended: true }));
 
-app.use(cors({
-    origin: "https://safa-eventmanagement-1.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
+
 
 // In-memory OTP storage
 const otpStore = new Map(); // Key: registerNumber, Value: otp
 
 // Create or connect to database
-const db = new sqlite3.Database("/data/database.sqlite", (err) => {
-    if (err) console.error(err.message);
-    else console.log("Connected to SQLite database.");
-});
+const dbPath = "/data/database.sqlite";
 
+// 🔥 create /data if not exists
+const dir = path.dirname(dbPath);
+if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+}
+
+const db = new sqlite3.Database(dbPath, (err) => {
+    if (err) {
+        console.error("DB ERROR:", err.message);
+    } else {
+        console.log("SQLite connected");
+    }
+});
+app.use(cors({
+    origin: "https://safa-eventmanagement-1.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 // Initialize Database Tables
 db.serialize(() => {
     // Users Table
