@@ -7,11 +7,17 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
+app.use(cors({
+
+    origin: "https://safa-eventmanagement-1.vercel.app",
+
+}));
+
 // In-memory OTP storage
 const otpStore = new Map(); // Key: registerNumber, Value: otp
 
 // Create or connect to database
-const db = new sqlite3.Database("./database.db", (err) => {
+const db = new sqlite3.Database("/data/database.sqlite", (err) => {
     if (err) console.error(err.message);
     else console.log("Connected to SQLite database.");
 });
