@@ -582,6 +582,8 @@ const Login = () => {
               <Input
                 label="Password"
                 type="password"
+                name="password"
+                autoComplete="current-password"
                 value={loginData.password}
                 onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                 required
